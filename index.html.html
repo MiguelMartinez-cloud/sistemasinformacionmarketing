@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demo: Coca-Cola Freestyle y Nestlé CDP</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f3f0;--card:#fff;--tx:#1c1c1c;--mu:#6b6b6b;--bd:#e0ded8;--red:#e4002b;--bl:#0a5c9e;--ok:#1b7f4b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#131314;--card:#1f1f21;--tx:#f0f0f0;--mu:#a0a0a0;--bd:#37373a;--bl:#5ab0f0;--ok:#4cc98a}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#131314;--card:#1f1f21;--tx:#f0f0f0;--mu:#a0a0a0;--bd:#37373a;--bl:#5ab0f0;--ok:#4cc98a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:960px;margin:0 auto;padding:14px}h1{font-size:19px;margin:0}h2{font-size:15px;margin:0 0 8px}
+.sub{color:var(--mu);font-size:12.5px}.note{font-size:12px;color:var(--mu);border-left:3px solid var(--bd);padding-left:8px;margin-top:8px}
+.tabs{display:flex;gap:6px;margin:10px 0}.tabs button{flex:1;padding:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:10px;font-weight:700;cursor:pointer}
+#t1.on{background:var(--red);color:#fff;border-color:var(--red)}#t2.on{background:var(--bl);color:#fff;border-color:var(--bl)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.g{display:grid;gap:12px;grid-template-columns:1fr 1fr}@media(max-width:700px){.g{grid-template-columns:1fr}}
+/* KIOSK */
+.kiosk{background:#0d0d0f;color:#fff;border-radius:18px;padding:12px;border:6px solid #2a2a2e}
+.kh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.kh b{font-size:17px;color:#fff}.kh b span{color:var(--red)}.kh small{color:#9a9a9a}
+.lbl{font-size:11px;letter-spacing:.08em;color:#9a9a9a;margin:8px 0 4px;text-transform:uppercase}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tile{border:2px solid #2d2d31;border-radius:12px;background:#1b1b1f;color:#fff;padding:10px 4px;text-align:center;font-weight:700;font-size:12.5px;cursor:pointer}
+.tile i{display:block;width:26px;height:26px;border-radius:50%;margin:0 auto 4px}.tile.on{border-color:#fff;background:#2a2a30}
+.fl{display:flex;flex-wrap:wrap;gap:6px}.fl .tile{padding:8px 11px;border-radius:20px;font-weight:600}
+.pour{display:flex;gap:10px;align-items:center;margin-top:10px}
+.cup{width:54px;height:76px;border:3px solid #cfcfcf;border-top:0;border-radius:0 0 12px 12px;position:relative;overflow:hidden;flex:none}.cup div{position:absolute;bottom:0;left:0;right:0;height:0;transition:height .9s;background:#6b2a14}
+.pbtn{flex:1;padding:16px;border:0;border-radius:40px;background:var(--red);color:#fff;font-weight:800;font-size:15px;cursor:pointer}
+.carts{display:flex;gap:4px;margin-top:10px}.carts div{flex:1;font-size:10px;color:#9a9a9a;text-align:center}.carts u{display:block;height:6px;background:#2d2d31;border-radius:3px;margin-bottom:2px;overflow:hidden;text-decoration:none}.carts u s{display:block;height:100%;background:#4cc98a}
+pre{margin:8px 0 0;font:11px/1.4 ui-monospace,monospace;color:#8ed1a5;background:#08130c;border-radius:8px;padding:8px;overflow:auto;white-space:pre-wrap}
+.btn{padding:11px;border:0;border-radius:10px;background:var(--red);color:#fff;font-weight:700;cursor:pointer;width:100%;font-size:14px;margin-top:6px}.btn.b{background:var(--bl)}.btn.gr{background:var(--mu)}
+.kpi{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}.kpi div{flex:1;min-width:88px;background:var(--bg);border-radius:10px;padding:8px;text-align:center}.kpi b{font-size:19px;display:block}.kpi small{color:var(--mu);font-size:11px}
+.bar{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12.5px}.bar span:first-child{width:118px;flex:none}.bar span:last-child{width:44px;text-align:right;flex:none}.bar div{flex:1}.bar i{display:block;height:13px;border-radius:4px;background:var(--c,var(--red));transition:width .4s;min-width:2px}
+.cols{display:flex;align-items:flex-end;gap:14px;height:120px;padding-top:8px}.cols div{flex:1;text-align:center;font-size:12px}.cols i{display:block;border-radius:6px 6px 0 0;background:var(--c,var(--red));margin-bottom:4px;transition:height .4s}
+.ins{background:var(--bg);border-radius:10px;padding:10px;font-size:13.5px;margin-top:8px}.ins b{color:var(--red)}.nb .ins b{color:var(--bl)}
+/* CDP console */
+.con{display:grid;grid-template-columns:150px 1fr;border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:var(--card)}@media(max-width:700px){.con{grid-template-columns:1fr}}
+.nav{background:#0f2a43;color:#cfe3f5;padding:10px 6px;display:flex;flex-direction:column;gap:3px}@media(max-width:700px){.nav{flex-direction:row;overflow-x:auto}}
+.nav small{padding:4px 8px;color:#7fa6c9;letter-spacing:.06em}@media(max-width:700px){.nav small{display:none}}
+.nav button{background:none;border:0;color:inherit;text-align:left;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:13px;white-space:nowrap}.nav button.on{background:#1d5a8e;color:#fff}
+.main{padding:14px;min-width:0}.main h2{font-size:16px}
+.row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:13.5px}.row:last-child{border:0}.row>span:first-child{flex:1}
+.sw{width:38px;height:22px;border-radius:12px;background:var(--bd);position:relative;cursor:pointer;flex:none;border:0}.sw:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}.sw.on{background:var(--ok)}.sw.on:after{left:19px}
+.st{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--bg);color:var(--mu)}.st.ok{color:var(--ok)}
+.prof{border:1px solid var(--bd);border-radius:12px;padding:10px;background:var(--bg)}.prof .av{width:38px;height:38px;border-radius:50%;background:var(--bl);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;float:left;margin-right:10px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12.5px;margin-top:8px;clear:both}.kv span{color:var(--mu)}.kv .off{opacity:.3}
+.sel{width:100%;padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-size:13.5px}
+.rule{display:grid;grid-template-columns:70px 1fr;gap:6px;align-items:center;margin:6px 0;font-size:13px}
+.chip{padding:6px 11px;border:1px solid var(--bd);border-radius:18px;background:var(--bg);color:var(--tx);cursor:pointer;font-size:12.5px;margin:0 4px 4px 0}.chip.on{background:var(--bl);color:#fff;border-color:var(--bl)}
+.fun div{margin:4px 0;padding:6px 10px;color:#fff;border-radius:6px;font-size:12.5px;background:var(--bl);display:flex;justify-content:space-between}
+</style></head><body><div class="w">
+<h1>Sistemas de información de marketing</h1>
+<div class="sub">Maqueta didáctica. Las interfaces son representaciones ilustrativas, y todos los datos son simulados.</div>
+<div class="tabs"><button id="t1" class="on" onclick="tab(1)">🥤 Coca-Cola Freestyle</button><button id="t2" onclick="tab(2)">🍫 Nestlé · CDP</button></div>
+
+<!-- COCA-COLA -->
+<section id="p1">
+<div class="card"><h2>¿Cómo funciona?</h2>
+Freestyle es un dispensador con pantalla táctil conectado a internet que mezcla la bebida con cartuchos de ingredientes. Cada servida genera un dato (qué se eligió, dónde y cuándo), que Coca-Cola analiza para entender qué prefiere la gente.
+<div class="note">Fuente: descripción pública de Coca-Cola Freestyle. Cherry Sprite (2017) se lanzó tras observar en Freestyle que muchos mezclaban Sprite con cereza.</div></div>
+<div class="g">
+<div><div class="kiosk">
+<div class="kh"><b>Coca-Cola <span>Freestyle</span></b><small>Pantalla táctil</small></div>
+<div class="lbl">1 · Elija su bebida</div><div class="tiles" id="kb"></div>
+<div class="lbl">2 · Añada un sabor</div><div class="fl" id="kf"></div>
+<div class="lbl">Contexto (lo registra el sistema)</div><div class="fl" id="kd"></div><div class="fl" style="margin-top:6px" id="kl"></div>
+<div class="pour"><div class="cup"><div id="cupf"></div></div><button class="pbtn" onclick="pour()">Mantenga para servir</button></div>
+<div class="carts" id="carts"></div>
+<pre id="ev">// evento de servida (ilustrativo)</pre></div>
+<button class="btn gr" onclick="seed()">Cargar 1 semana simulada (300 servidas)</button></div>
+
+<div class="card" style="margin:0"><h2>Panel de datos recopilados</h2>
+<div class="kpi"><div><b id="k1">0</b><small>Servidas</small></div><div><b id="k2">0%</b><small>Con sabor</small></div><div><b id="k3">–</b><small>Combo líder</small></div></div>
+<div class="sub">Combinaciones más servidas</div><div id="c1"><div class="sub">Sirva bebidas o cargue la semana simulada.</div></div>
+<div class="sub" style="margin-top:10px">Demanda por franja horaria</div><div class="cols" id="c2"></div>
+<div class="sub" style="margin-top:10px">Servidas por punto de venta</div><div id="c3"></div></div></div>
+<div class="card nb"><h2>📌 Decisiones que habilita el dato</h2><div class="ins" id="dec">Genere datos para ver las lecturas sugeridas.</div>
+<div class="note">Las lecturas son ejemplos de uso del dato, no decisiones reales de la compañía, salvo el caso Cherry Sprite citado arriba.</div></div>
+</section>
+
+<!-- NESTLE -->
+<section id="p2" style="display:none" class="nb">
+<div class="card"><h2>¿Cómo funciona?</h2>
+Estrategia de datos propios (first-party) con una CDP (Customer Data Platform). Nestlé México unificó en la CDP de Treasure Data datos de sitios web, anuncios de captación, CRM y compras (16 unidades de negocio) y los conectó con Meta, Google DV360, TikTok, Pinterest, YouTube, Amazon y Salesforce.
+<div class="note">Fuente: caso de cliente de Treasure Data. Nestlé Brasil, con Artefact, reportó eficiencia y ROI en 92 días. Nestlé Suiza usó otra solución (Commanders Act).</div></div>
+<div class="con"><div class="nav"><small>CDP · CONSOLA</small>
+<button class="on" onclick="nv(0,this)">1 Fuentes</button><button onclick="nv(1,this)">2 Perfil único</button><button onclick="nv(2,this)">3 Segmentos</button><button onclick="nv(3,this)">4 Activación</button><button onclick="nv(4,this)">5 Analítica</button></div>
+<div class="main" id="mn"></div></div>
+</section>
+</div>
+<script>
+const $=id=>document.getElementById(id),R=(a,b)=>Math.round(a+Math.random()*(b-a));
+function tab(n){$('p1').style.display=n==1?'':'none';$('p2').style.display=n==2?'':'none';$('t1').classList.toggle('on',n==1);$('t2').classList.toggle('on',n==2)}
+function bars(rows,c,suf){const m=Math.max(...rows.map(r=>r[1]),1);return rows.map(r=>`<div class="bar" style="--c:${c}"><span>${r[0]}</span><div><i style="width:${r[1]/m*100}%"></i></div><span>${r[1]}${suf||''}</span></div>`).join('')}
+/* ---------- FREESTYLE ---------- */
+const BR=[['Coca-Cola','#e4002b'],['Sprite','#2fa84f'],['Fanta','#f58220'],['Dr Pepper','#8b2a3a'],['Powerade','#1e6fd9'],['Minute Maid','#f6b800']],FL=['Sin sabor','Cereza','Lima','Vainilla','Naranja'],DP=['Mañana','Tarde','Noche'],LC=['Restaurante','Cine','Cafetería'];
+let cur={b:0,f:0,d:1,l:0},D={},DD={Mañana:0,Tarde:0,Noche:0},LL={Restaurante:0,Cine:0,Cafetería:0},N=0,F=0,cart=BR.map(()=>100);
+function pick(id,arr,key,mk){const e=$(id);e.innerHTML='';arr.forEach((a,i)=>{const t=document.createElement('button');t.className='tile'+(cur[key]==i?' on':'');t.innerHTML=mk?mk(a):(a.join?a[0]:a);t.onclick=()=>{cur[key]=i;pick(id,arr,key,mk)};e.appendChild(t)})}
+function ui(){pick('kb',BR,'b',a=>`<i style="background:${a[1]}"></i>${a[0]}`);pick('kf',FL,'f');pick('kd',DP,'d');pick('kl',LC,'l');carts()}
+function carts(){$('carts').innerHTML=BR.map((b,i)=>`<div><u><s style="width:${cart[i]}%;background:${cart[i]<30?'#e4002b':'#4cc98a'}"></s></u>${b[0].split(' ')[0]}</div>`).join('')}
+function rec(b,f,d,l){const k=f?BR[b][0]+' + '+FL[f]:BR[b][0];D[k]=(D[k]||0)+1;DD[DP[d]]++;LL[LC[l]]++;N++;if(f)F++;cart[b]=Math.max(0,cart[b]-.4)}
+function pour(){const c=$('cupf');c.style.background=BR[cur.b][1];c.style.height='90%';setTimeout(()=>c.style.height='0',1400);rec(cur.b,cur.f,cur.d,cur.l);
+$('ev').textContent=JSON.stringify({maquina:'FS-0042',hora:DP[cur.d],local:LC[cur.l],marca:BR[cur.b][0],sabor:FL[cur.f]},null,1);ui();draw()}
+function w(a){let r=Math.random(),s=0;for(let i=0;i<a.length;i++){s+=a[i];if(r<s)return i}return a.length-1}
+function seed(){for(let i=0;i<300;i++){const b=w([.34,.22,.15,.12,.09,.08]);let f=0;if(Math.random()<.5)f=b==1&&Math.random()<.55?1:1+R(0,3);rec(b,f,w([.2,.45,.35]),w([.45,.3,.25]))}ui();draw()}
+function draw(){const e=Object.entries(D).sort((a,b)=>b[1]-a[1]);$('k1').textContent=N;$('k2').textContent=Math.round(F/N*100)+'%';$('k3').textContent=e[0][0];
+$('c1').innerHTML=bars(e.slice(0,7),'var(--red)');
+const mx=Math.max(...Object.values(DD));$('c2').innerHTML=DP.map(p=>`<div><i style="height:${DD[p]/mx*90}px"></i>${DD[p]}<br>${p}</div>`).join('');
+$('c3').innerHTML=bars(LC.map(l=>[l,LL[l]]),'#e4002b');
+const mix=e.find(x=>x[0].includes('+')),pk=Object.entries(DD).sort((a,b)=>b[1]-a[1])[0],lc=Object.entries(LL).sort((a,b)=>b[1]-a[1])[0],low=cart.map((v,i)=>[v,i]).sort((a,b)=>a[0]-b[0])[0];
+$('dec').innerHTML=`<p>🧪 <b>Portafolio:</b> ${mix?`«${mix[0]}» es la mezcla personalizada más pedida (${mix[1]}). Si se sostiene, hay base para evaluar un producto propio, como pasó con Cherry Sprite.`:'aún no hay mezclas personalizadas.'}</p><p>🕒 <b>Operación:</b> la mayor demanda está en la franja «${pk[0]}»; conviene tener cartuchos listos antes.</p><p>📍 <b>Distribución:</b> «${lc[0]}» concentra más servidas (${lc[1]}). Útil para priorizar alianzas.</p><p>🧃 <b>Cartuchos:</b> ${BR[low[1]][0]} está en ${Math.round(low[0])}%.</p>`}
+ui();
+/* ---------- NESTLE ---------- */
+const SRC=[['Sitio web','Eventos de navegación',40000],['Anuncios de captación','Leads Meta / Google',15000],['CRM','Contactos y consentimientos',30000],['Compras / e-commerce','Pedidos',20000]],CH=[['Email',3.2],['Meta',1.7],['TikTok',1.3],['Google DV360',.9]];
+let S=[1,1,0,0],RL={i:0,c:0},AC=[0,0,0,0],res=null,pg=0;
+const INT=['Repostería','Café','Mascotas'],CMP=['Compró en 90 días','Abrió correos','Visitó web'];
+function nv(i,el){pg=i;document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('on'));el.classList.add('on');render()}
+const nU=()=>{const on=SRC.filter((s,i)=>S[i]);const raw=on.reduce((a,s)=>a+s[2],0);return[raw,Math.round(raw*(on.length>1?.55:.7)*(on.length?1:0)),on.length*25]};
+const aud=()=>Math.round(nU()[1]*.18*(RL.i?1:1.5)*(RL.c?1:1.4));
+function sw(arr,i){return`<button class="sw ${arr[i]?'on':''}" onclick="${arr==S?'S':'AC'}[${i}]^=1;render()"></button>`}
+function render(){const [raw,u,pc]=nU();let h='';
+if(pg==0){h=`<h2>Fuentes de datos propios</h2><div class="sub">Conecte las fuentes que alimentan la CDP.</div>`+SRC.map((s,i)=>`<div class="row"><span><b>${s[0]}</b><br><small class="sub">${s[1]}</small></span><span class="st ${S[i]?'ok':''}">${S[i]?'● Conectado · '+s[2].toLocaleString()+' reg.':'Desconectado'}</span>${sw(S,i)}</div>`).join('')+`<div class="kpi" style="margin-top:10px"><div><b>${raw.toLocaleString()}</b><small>Registros brutos</small></div><div><b>${u.toLocaleString()}</b><small>Clientes únicos</small></div></div><div class="note">Cifras simuladas. En la realidad, la CDP funde registros del mismo cliente (resolución de identidad).</div>`}
+if(pg==1){const f=[['Sitio web',0],['Anuncios',1],['CRM',2],['Compras',3]];h=`<h2>Perfil único (registro dorado)</h2><div class="sub">Un cliente ficticio, armado con las fuentes activas.</div><div class="prof"><div class="av">AR</div><b>Ana R. (ficticia)</b><br><span class="sub">Perfil completo: ${pc}%</span><div class="kv">`+f.map(([k,i])=>`<div class="${S[i]?'':'off'}"><span>${k}</span><br>${S[i]?['3 sesiones en recetas','lead: guía de repostería','ana@correo.mx (consentido)','2 compras: café'][i]:'sin datos'}</div>`).join('')+`</div></div><div class="note">Cuantas más fuentes, más completo el perfil y mejor el segmento.</div>`}
+if(pg==2){h=`<h2>Constructor de segmentos</h2><div class="rule"><b>Interés</b><div>${INT.map((x,i)=>`<button class="chip ${RL.i==i+1?'on':''}" onclick="RL.i=RL.i==${i+1}?0:${i+1};render()">${x}</button>`).join('')}</div></div><div class="rule"><b>Conducta</b><div>${CMP.map((x,i)=>`<button class="chip ${RL.c==i+1?'on':''}" onclick="RL.c=RL.c==${i+1}?0:${i+1};render()">${x}</button>`).join('')}</div></div><div class="rule"><b>Regla fija</b><span class="st ok">✔ Solo clientes con consentimiento</span></div><div class="kpi"><div><b>${aud().toLocaleString()}</b><small>Audiencia estimada</small></div><div><b>${u?Math.round(aud()/u*100):0}%</b><small>% de la base</small></div></div><div class="note">Cuanto más afinado el segmento, más pequeña y relevante la audiencia.</div>`}
+if(pg==3){h=`<h2>Activación en canales</h2><div class="sub">Audiencia: ${aud().toLocaleString()} personas</div>`+CH.map((c,i)=>`<div class="row"><span>${c[0]}</span>${sw(AC,i)}</div>`).join('')+`<button class="btn b" onclick="run()">Simular campaña 30 días</button><div class="note">Canales reales conectados por Nestlé México incluyen Meta, Google DV360 y TikTok. Email es un ejemplo genérico de canal propio.</div>`}
+if(pg==4){if(!res)h=`<h2>Analítica</h2><div class="sub">Active canales y simule una campaña (paso 4).</div>`;else{const t=res.reduce((a,r)=>a+r.cl,0),im=res.reduce((a,r)=>a+r.im,0),best=[...res].sort((a,b)=>b.cs-a.cs)[0];
+h=`<h2>Comportamiento de los clientes</h2><div class="kpi"><div><b>${im.toLocaleString()}</b><small>Impresiones</small></div><div><b>${t.toLocaleString()}</b><small>Clics</small></div><div><b>${Math.round(t*.7*.25*.35).toLocaleString()}</b><small>Compras</small></div></div>
+<div class="sub">CTR (%) por canal: masivo vs. segmentado</div>`+res.map(r=>`<div class="bar" style="--c:var(--mu)"><span>${r.n} masivo</span><div><i style="width:${r.cm*14}%"></i></div><span>${r.cm.toFixed(1)}</span></div><div class="bar" style="--c:var(--bl)"><span>${r.n} segm.</span><div><i style="width:${r.cs*14}%"></i></div><span>${r.cs.toFixed(1)}</span></div>`).join('')+`<div class="sub" style="margin:10px 0 4px">Embudo del cliente</div><div class="fun"><div><span>Clics</span><b>${t.toLocaleString()}</b></div><div style="width:70%"><span>Visitas al sitio</span><b>${Math.round(t*.7).toLocaleString()}</b></div><div style="width:45%"><span>Carrito</span><b>${Math.round(t*.7*.25).toLocaleString()}</b></div><div style="width:30%"><span>Compra</span><b>${Math.round(t*.7*.25*.35).toLocaleString()}</b></div></div><div class="ins">📌 <b>Decisión:</b> ${best.n} rinde más con el segmento (CTR ${best.cs.toFixed(1)}%). Mover presupuesto hacia ese canal y repetir la audiencia. Los resultados vuelven a la CDP y afinan el siguiente segmento.</div><div class="note">Cifras simuladas. Para resultados reales, consulte el caso de Treasure Data.</div>`}}
+$('mn').innerHTML=h}
+function run(){const a=aud(),on=CH.filter((c,i)=>AC[i]);if(!on.length||!a){$('mn').insertAdjacentHTML('beforeend','<div class="ins">Conecte fuentes, arme un segmento y active al menos un canal.</div>');return}
+res=on.map(c=>{const im=a*2,cs=c[1]*(1+Math.random()*.2),cm=cs*.55;return{n:c[0],im,cs,cm,cl:Math.round(im*cs/100)}});pg=4;document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('on',i==4));render()}
+render();
+</script></body></html>
